@@ -9,7 +9,7 @@ ENV GOPATH /home/mahdi/go
 #Install basic modules and Docker
 RUN apt-get update && \
     apt-get install -y sudo apt-utils rsync build-essential wget curl git docker.io \
-        vim libterm-readline-gnu-perl libterm-readkey-perl iputils-ping && \
+        vim libterm-readline-gnu-perl libterm-readkey-perl iputils-ping net-tools && \
     service docker start
 
 #Install Go
@@ -55,6 +55,6 @@ RUN ln -s /home/mahdi/kubernetes/third_party/etcd/etcd /usr/local/bin/ && \
 
 USER mahdi
 
-EXPOSE 8000-9900
+EXPOSE 6000-8900
 WORKDIR /home/mahdi
 
