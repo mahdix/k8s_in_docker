@@ -10,7 +10,8 @@ ENV GOPATH /home/mahdi/go
 RUN apt-get update && \
     apt-get install -y sudo apt-utils rsync build-essential wget curl git docker.io \
         vim libterm-readline-gnu-perl libterm-readkey-perl iputils-ping net-tools && \
-    service docker start
+    service docker start && \
+    systemctl enable docker
 
 #Install Go
 RUN cd /usr/local && wget -q https://storage.googleapis.com/golang/go${GOVERSION}.linux-amd64.tar.gz && \
@@ -33,7 +34,8 @@ USER mahdi
 #Get Kubernetes source code
 RUN whoami && \
     cd /home/mahdi && \
-    git clone --depth=1 https://github.com/mahdix/kubernetes.git
+    git clone --depth=1 https://github.com/mahdix/kubernetes.git && \
+    git clone --depth=1 https://github.com/mahdix/minikube.git
 
 #Setup git and dependencies
 RUN cd /home/mahdi/kubernetes && \
@@ -41,6 +43,12 @@ RUN cd /home/mahdi/kubernetes && \
     git remote add origin git@github.com:mahdix/kubernetes.git && \
     git remote add upstream https://github.com/kubernetes/kubernetes.git && \
     git remote set-url --push upstream no_push && \
+    cd /home/mahdi/minikube && \
+    git remote rm origin && \
+    git remote add origin git@github.com:mahdix/minikube.git && \
+    git remote add upstream https://github.com/kubernetes/minikube.git && \
+    git remote set-url --push upstream no_push && \
+    cd /home/mahdi/kubernetes && \
     hack/install-etcd.sh && \
     go get github.com/onsi/ginkgo/ginkgo && \
     go get github.com/onsi/gomega && \
